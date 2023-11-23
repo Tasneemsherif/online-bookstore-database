@@ -1,0 +1,173 @@
+use online_bookstore;
+Go
+CREATE TABLE customer
+(
+  gender VARCHAR(100) NOT NULL,
+  customer_id INT NOT NULL,
+  name VARCHAR(200) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  birthdate DATE NOT NULL,
+  password VARCHAR(16) NOT NULL,
+  PRIMARY KEY (customer_id)
+);
+
+CREATE TABLE employees
+(
+  gender VARCHAR(200) NOT NULL,
+  birthdate DATE NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  email VARCHAR(200) NOT NULL,
+  employee_id INT NOT NULL,
+  salary INT NOT NULL,
+  name VARCHAR(200) NOT NULL,
+  PRIMARY KEY (employee_id)
+);
+
+CREATE TABLE Books
+(
+  publication_year INT NOT NULL,
+  title VARCHAR(100) NOT NULL,
+  publisher VARCHAR(100) NOT NULL,
+  book_id INT NOT NULL,
+  number_in_stock INT NOT NULL,
+  price INT NOT NULL,
+  customer_id INT NOT NULL,
+  PRIMARY KEY (book_id),
+  FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+);
+
+CREATE TABLE author
+(
+  author_id INT NOT NULL,
+  name VARCHAR(200) NOT NULL,
+  book_id INT NOT NULL,
+  PRIMARY KEY (author_id),
+  FOREIGN KEY (book_id) REFERENCES Books(book_id)
+);
+
+CREATE TABLE cart
+(
+  quantity INT NOT NULL,
+  cart_id INT NOT NULL,
+  total_price INT NOT NULL,
+  customer_id INT NOT NULL,
+  PRIMARY KEY (cart_id),
+  FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+);
+
+CREATE TABLE category
+(
+  description VARCHAR(200) NOT NULL,
+  name VARCHAR(200) NOT NULL,
+  category_id INT NOT NULL,
+  PRIMARY KEY (category_id)
+);
+
+CREATE TABLE orders
+(
+  order_id INT NOT NULL,
+  arrival_date DATE NOT NULL,
+  PRIMARY KEY (order_id)
+);
+
+CREATE TABLE belongs_to
+(
+  book_id INT NOT NULL,
+  category_id INT NOT NULL,
+  PRIMARY KEY (book_id, category_id),
+  FOREIGN KEY (book_id) REFERENCES Books(book_id),
+  FOREIGN KEY (category_id) REFERENCES category(category_id)
+);
+
+CREATE TABLE add__to
+(
+  cart_id INT NOT NULL,
+  book_id INT NOT NULL,
+  PRIMARY KEY (cart_id, book_id),
+  FOREIGN KEY (cart_id) REFERENCES cart(cart_id),
+  FOREIGN KEY (book_id) REFERENCES Books(book_id)
+);
+
+CREATE TABLE borrow
+(
+  start_date DATE NOT NULL,
+  fine INT NOT NULL,
+  end_date DATE NOT NULL,
+  customer_id INT NOT NULL,
+  book_id INT NOT NULL,
+  PRIMARY KEY (customer_id, book_id),
+  FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+  FOREIGN KEY (book_id) REFERENCES Books(book_id)
+);
+
+CREATE TABLE RATE
+(
+  comment VARCHAR(255) NOT NULL,
+  customer_id INT NOT NULL,
+  book_id INT NOT NULL,
+  PRIMARY KEY (customer_id, book_id),
+  FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+  FOREIGN KEY (book_id) REFERENCES Books(book_id)
+);
+
+CREATE TABLE checkout
+(
+  order_id INT NOT NULL,
+  cart_id INT NOT NULL,
+  PRIMARY KEY (order_id, cart_id),
+  FOREIGN KEY (order_id) REFERENCES orders(order_id),
+  FOREIGN KEY (cart_id) REFERENCES cart(cart_id)
+);
+
+CREATE TABLE placed
+(
+  order_id INT NOT NULL,
+  customer_id INT NOT NULL,
+  PRIMARY KEY (order_id, customer_id),
+  FOREIGN KEY (order_id) REFERENCES orders(order_id),
+  FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+);
+
+CREATE TABLE sold
+(
+  book_id INT NOT NULL,
+  order_id INT NOT NULL,
+  PRIMARY KEY (book_id, order_id),
+  FOREIGN KEY (book_id) REFERENCES Books(book_id),
+  FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
+
+CREATE TABLE customer_phone
+(
+  phone INT NOT NULL,
+  customer_id INT NOT NULL,
+  PRIMARY KEY (phone, customer_id),
+  FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+);
+
+CREATE TABLE employees_phone
+(
+  phone INT NOT NULL,
+  employee_id INT NOT NULL,
+  PRIMARY KEY (phone, employee_id),
+  FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+);
+
+CREATE TABLE book_store
+(
+  name VARCHAR(200) NOT NULL,
+  ip_address INT NOT NULL,
+  employee_id INT NOT NULL,
+  PRIMARY KEY (ip_address),
+  FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+);
+
+CREATE TABLE contains_
+(
+  ip_address INT NOT NULL,
+  book_id INT NOT NULL,
+  PRIMARY KEY (ip_address, book_id),
+  FOREIGN KEY (ip_address) REFERENCES book_store(ip_address),
+  FOREIGN KEY (book_id) REFERENCES Books(book_id)
+);
